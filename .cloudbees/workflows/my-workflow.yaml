@@ -1,35 +1,36 @@
 name: trufflehog-secret-scan-workflow
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
+
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - 'trufflehog-secret-sast-plugin'
+
 permissions:
   scm-token-own: read
   scm-token-org: read
   id-token: write
+  
 jobs:
+
   trufflehog-sast-scan-without-repourl:
     steps:
       - name: checkout Source Code
         uses: cloudbees-io/checkout@v1
+
       - name: Run TruffleHog SAST Action
-        uses: cloudbees-io/trufflehog-secret-scan-code@add-threshold-input
+        uses: cloudbees-io/trufflehog-secret-scan-code@v1
         with:
-          branch: ${{ cloudbees.scm.branch }}
-  trufflehog-sast-scan-with-repourl:
-    steps:
-      - name: Run TruffleHog SAST Action
-        uses: cloudbees-io/trufflehog-secret-scan-code@add-threshold-input
-        with:
-          repoUrl: https://github.com/calculi-corp/template-go-testing.git
-          token: ${{ secrets.GIT_PAT }}
-          branch: trufflehog-sast-testing
+          branch: "${{ cloudbees.scm.branch }}"
+
   trufflehog-sast-scan-with-threshold:
     steps:
       - name: checkout Source Code
         uses: cloudbees-io/checkout@v1
+
       - name: Run TruffleHog SAST Action
-        uses: cloudbees-io/trufflehog-secret-scan-code@add-threshold-input
+        uses: cloudbees-io/trufflehog-secret-scan-code@v1
         with:
-          branch: ${{ cloudbees.scm.branch }}
+          branch: "${{ cloudbees.scm.branch }}"
           threshold-very-high: 5

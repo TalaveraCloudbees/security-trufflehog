@@ -5,7 +5,7 @@ kind: workflow
 on:
   push:
     branches:
-      - 'trufflehog-secret-sast-plugin'
+      - "**"
 
 permissions:
   scm-token-own: read
